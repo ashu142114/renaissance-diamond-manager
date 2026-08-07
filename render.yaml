@@ -2,7 +2,7 @@ services:
   - type: web
     name: renaissance-diamond-manager
     runtime: node
-    plan: starter
+    plan: free
     buildCommand: npm ci && npm run setup && npm run build
     startCommand: npm run start
     healthCheckPath: /health
@@ -20,11 +20,4 @@ services:
       - key: SHOPIFY_DIAMOND_PRODUCT_ID
         value: gid://shopify/Product/8198431277149
       - key: DATABASE_URL
-        fromDatabase:
-          name: renaissance-diamond-db
-          property: connectionString
-
-databases:
-  - name: renaissance-diamond-db
-    plan: starter
-    databaseName: renaissance_diamonds
+        sync: false
