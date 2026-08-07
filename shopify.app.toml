@@ -1,0 +1,18 @@
+client_id = "YOUR_SHOPIFY_API_KEY"
+name = "Renaissance Diamond Manager"
+application_url = "https://YOUR-RENDER-SERVICE.onrender.com"
+embedded = true
+
+[build]
+automatically_update_urls_on_dev = true
+
+[access_scopes]
+scopes = "read_products,write_products,read_inventory,write_inventory"
+
+[auth]
+redirect_urls = [ "https://YOUR-RENDER-SERVICE.onrender.com/auth/callback" ]
+
+[app_proxy]
+url = "https://YOUR-RENDER-SERVICE.onrender.com/api/storefront/diamonds"
+subpath = "diamonds"
+prefix = "apps"
