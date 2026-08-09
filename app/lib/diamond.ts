@@ -3,8 +3,17 @@ import { z } from "zod";
 export const diamondTypes = ["LAB_GROWN", "NATURAL"] as const;
 export const diamondStatuses = ["ACTIVE", "INACTIVE", "SOLD"] as const;
 export const diamondShapes = [
-  "Round", "Oval", "Pear", "Emerald", "Cushion", "Princess",
-  "Heart", "Marquise", "Radiant", "Asscher",
+  "Round",
+  "Cushion",
+  "Heart",
+  "Marquise",
+  "Oval",
+  "Pear",
+  "Emerald",
+  "Princess",
+  "Radiant",
+  "Old Miner",
+  "Asscher",
 ] as const;
 
 const optionalUrl = z.union([z.literal(""), z.string().url()]).optional();
@@ -12,7 +21,7 @@ const optionalUrl = z.union([z.literal(""), z.string().url()]).optional();
 export const diamondSchema = z.object({
   certificate: z.string().trim().min(2, "Certificate number is required").max(100),
   type: z.enum(diamondTypes),
-  shape: z.string().trim().min(2).max(40),
+  shape: z.enum(diamondShapes, { message: "Select a valid diamond shape" }),
   carat: z.coerce.number().positive().max(100),
   color: z.string().trim().min(1).max(20),
   clarity: z.string().trim().min(1).max(20),
