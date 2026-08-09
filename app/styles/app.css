@@ -36,7 +36,7 @@ button, input, select { font: inherit; }
 .dm-stat strong { display: block; margin-top: 6px; font-size: 26px; }
 .dm-card { padding: 20px; }
 
-.dm-toolbar { display: grid; grid-template-columns: minmax(220px, 1fr) 170px 170px auto; gap: 10px; margin-bottom: 16px; }
+.dm-toolbar { display: grid; grid-template-columns: minmax(220px, 1fr) 150px 150px 150px auto; gap: 10px; margin-bottom: 16px; }
 .dm-input, .dm-select, .dm-file { width: 100%; border: 1px solid #c9c6c0; background: #fff; border-radius: 8px; min-height: 42px; padding: 9px 11px; }
 .dm-label { display: grid; gap: 7px; font-size: 13px; font-weight: 650; }
 .dm-help { color: var(--muted); font-size: 12px; font-weight: 400; }
