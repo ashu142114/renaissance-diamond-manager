@@ -1,6 +1,6 @@
 import ExcelJS from "exceljs";
 import { parse } from "csv-parse/sync";
-import { diamondSchema, normalizedCertificate, type DiamondInput } from "./diamond";
+import { diamondSchema, diamondShapes, normalizedCertificate, type DiamondInput } from "./diamond";
 
 export type ImportRow = DiamondInput & { rowNumber: number };
 export type RowError = {
