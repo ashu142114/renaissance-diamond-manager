@@ -1,4 +1,5 @@
 import type { Diamond } from "@prisma/client";
+import { diamondShapes } from "../lib/diamond";
 
 type Props = {
   diamond?: Diamond | null;
@@ -28,7 +29,13 @@ export function DiamondForm({ diamond, errors = {}, submitLabel = "Save diamond"
         </select>{errors.type && <span className="dm-error">{errors.type}</span>}
       </label>
       {field("sku", "SKU")}
-      {field("shape", "Shape", "text", true)}
+      <label className="dm-label">Shape category *
+        <select className="dm-select" name="shape" required defaultValue={value(diamond, "shape", "Round")}>
+          {diamondShapes.map((shape) => <option key={shape} value={shape}>{shape}</option>)}
+        </select>
+        <span className="dm-help">The storefront automatically groups this diamond under the selected shape.</span>
+        {errors.shape && <span className="dm-error">{errors.shape}</span>}
+      </label>
       {field("carat", "Carat", "number", true, { step: "0.001", min: "0.001" })}
       {field("lab", "Grading lab", "text", true)}
 
@@ -50,7 +57,11 @@ export function DiamondForm({ diamond, errors = {}, submitLabel = "Save diamond"
       </label>
 
       <h2 className="dm-section-title">Media</h2>
-      {field("imageUrl", "Image URL", "url")}
+      <label className="dm-label">Original diamond image URL
+        <input className="dm-input" name="imageUrl" type="url" defaultValue={value(diamond, "imageUrl")} placeholder="https://cdn.shopify.com/..." />
+        <span className="dm-help">Upload the original image in Shopify Content → Files, then paste its direct link here.</span>
+        {errors.imageUrl && <span className="dm-error">{errors.imageUrl}</span>}
+      </label>
       {field("videoUrl", "Video URL", "url")}
       {field("reportUrl", "Certificate / report URL", "url")}
       {errors.form && <p className="dm-error dm-span-3">{errors.form}</p>}
