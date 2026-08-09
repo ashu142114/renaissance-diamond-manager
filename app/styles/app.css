@@ -26,6 +26,12 @@ button, input, select { font: inherit; }
 .dm-btn { border: 1px solid var(--line); background: #fff; color: var(--ink); padding: 10px 15px; border-radius: 8px; text-decoration: none; cursor: pointer; font-weight: 650; }
 .dm-btn--primary { background: var(--gold); border-color: var(--gold); color: #fff; }
 .dm-btn--primary:hover { background: var(--gold-dark); }
+.dm-btn--export { border-color: #cfa96f; color: var(--gold-dark); background: #fffaf2; }
+.dm-btn--export:hover { background: #f3e3c8; border-color: var(--gold); transform: translateY(-1px); }
+.dm-btn--import { border-color: var(--ink); background: var(--ink); color: #fff; }
+.dm-btn--import:hover { background: #34322e; }
+.dm-btn--filter { background: #f3e3c8; border-color: #cfa96f; color: var(--gold-dark); }
+.dm-actions .dm-btn { min-height: 44px; display: inline-flex; align-items: center; justify-content: center; transition: background .18s, border-color .18s, transform .18s; }
 .dm-btn--danger { color: var(--danger); border-color: #efc4c0; }
 .dm-btn:disabled { opacity: .55; cursor: not-allowed; }
 
