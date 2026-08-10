@@ -72,6 +72,8 @@ function validateRows(rawRows: Record<string, unknown>[]) {
 
   rawRows.forEach((raw, index) => {
     const rowNumber = index + 2;
+    const isBlank = Object.values(raw).every((value) => String(value ?? "").trim() === "");
+    if (isBlank) return;
     const mapped = mapObject(raw);
     const parsed = diamondSchema.safeParse(mapped);
 
