@@ -1,6 +1,7 @@
 import type { LoaderFunctionArgs } from "react-router";
 import { Form, Link, useLoaderData } from "react-router";
-import prisma from "../db.server";\nimport { diamondShapes } from "../lib/diamond";
+import prisma from "../db.server";
+import { diamondShapes } from "../lib/diamond";
 import { authenticate } from "../shopify.server";
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -8,7 +9,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url);
   const q = url.searchParams.get("q")?.trim() || "";
   const type = url.searchParams.get("type") || "";
-  const status = url.searchParams.get("status") || "";\n  const shape = url.searchParams.get("shape") || "";
+  const status = url.searchParams.get("status") || "";
+  const shape = url.searchParams.get("shape") || "";
   const where = {
     shop: session.shop,
     ...(type ? { type } : {}), ...(status ? { status } : {}), ...(shape ? { shape } : {}),
