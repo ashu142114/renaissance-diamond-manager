@@ -1,5 +1,6 @@
 import type { LoaderFunctionArgs } from "react-router";
 import { Form, Link, useLoaderData } from "react-router";
+import { useState } from "react";
 import prisma from "../db.server";
 import { diamondShapes } from "../lib/diamond";
 import { authenticate } from "../shopify.server";
@@ -26,11 +27,42 @@ export async function loader({ request }: LoaderFunctionArgs) {
   return { diamonds, stats: { total, active, lab, natural }, filters: { q, type, status, shape } };
 }
 
+function ExportButton({ href, filename, label }: { href: string; filename: string; label: string }) {
+  const [loading, setLoading] = useState(false);
+
+  async function download() {
+    if (loading) return;
+    setLoading(true);
+    try {
+      const response = await fetch(href, { credentials: "same-origin" });
+      if (!response.ok) throw new Error(`Export failed (${response.status})`);
+      const blob = await response.blob();
+      const objectUrl = URL.createObjectURL(blob);
+      const anchor = document.createElement("a");
+      anchor.href = objectUrl;
+      anchor.download = filename;
+      document.body.appendChild(anchor);
+      anchor.click();
+      anchor.remove();
+      window.setTimeout(() => URL.revokeObjectURL(objectUrl), 1000);
+    } catch (error) {
+      console.error(error);
+      window.alert("Export failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return <button className="dm-btn dm-btn--export" type="button" onClick={download} disabled={loading}>
+    {loading ? "Preparing…" : label}
+  </button>;
+}
+
 export default function DiamondsIndex() {
   const { diamonds, stats, filters } = useLoaderData<typeof loader>();
   return <main className="dm-page">
     <header className="dm-header"><div><span className="dm-eyebrow">Renaissance Jewel</span><h1 className="dm-title">Diamond Manager</h1><p className="dm-subtitle">Manage inventory, imports and Shopify cart variants in one place.</p></div>
-      <div className="dm-actions"><Link className="dm-btn dm-btn--export" to="/app/export/csv" reloadDocument>↓ Export CSV</Link><Link className="dm-btn dm-btn--export" to="/app/export/xlsx" reloadDocument>↓ Export Excel</Link><Link className="dm-btn dm-btn--import" to="/app/import">↑ Import</Link><Link className="dm-btn dm-btn--primary" to="/app/diamonds/new">＋ Add diamond</Link></div></header>
+      <div className="dm-actions"><ExportButton href="/app/export/csv" filename="renaissance-diamonds.csv" label="↓ Export CSV"/><ExportButton href="/app/export/xlsx" filename="renaissance-diamonds.xlsx" label="↓ Export Excel"/><Link className="dm-btn dm-btn--import" to="/app/import">↑ Import</Link><Link className="dm-btn dm-btn--primary" to="/app/diamonds/new">＋ Add diamond</Link></div></header>
     <section className="dm-stats"><div className="dm-stat"><span>Total</span><strong>{stats.total}</strong></div><div className="dm-stat"><span>Active</span><strong>{stats.active}</strong></div><div className="dm-stat"><span>Lab-Grown</span><strong>{stats.lab}</strong></div><div className="dm-stat"><span>Natural</span><strong>{stats.natural}</strong></div></section>
     <section className="dm-card"><Form className="dm-toolbar"><input className="dm-input" name="q" placeholder="Certificate, lab or SKU" defaultValue={filters.q}/><select className="dm-select" name="shape" defaultValue={filters.shape}><option value="">All shapes</option>{diamondShapes.map((shape) => <option key={shape} value={shape}>{shape}</option>)}</select><select className="dm-select" name="type" defaultValue={filters.type}><option value="">All types</option><option value="LAB_GROWN">Lab-Grown</option><option value="NATURAL">Natural</option></select><select className="dm-select" name="status" defaultValue={filters.status}><option value="">All statuses</option><option>ACTIVE</option><option>INACTIVE</option><option>SOLD</option></select><button className="dm-btn dm-btn--filter" type="submit">Apply filters</button></Form>
       {diamonds.length ? <div className="dm-table-wrap"><table className="dm-table"><thead><tr><th>Diamond</th><th>Certificate</th><th>Type</th><th>Specs</th><th>Price</th><th>Stock</th><th>Status</th><th>Shopify</th><th></th></tr></thead><tbody>{diamonds.map((d) => <tr key={d.id}><td>{d.imageUrl ? <img className="dm-thumb" src={d.imageUrl} alt={d.certificate} width="54" height="54"/> : "—"}</td><td><strong>{d.certificate}</strong><br/><small>{d.lab}</small></td><td><span className={`dm-badge dm-badge--${d.type === "LAB_GROWN" ? "lab" : "natural"}`}>{d.type === "LAB_GROWN" ? "Lab-Grown" : "Natural"}</span></td><td>{d.shape} · {
