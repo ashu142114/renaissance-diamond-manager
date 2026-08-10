@@ -42,7 +42,7 @@ export async function action({ request }: ActionFunctionArgs) {
   const duplicateErrors = parsed.rows.filter((row) => existingSet.has(row.certificate)).map((row) => ({ rowNumber: row.rowNumber, field: "certificate", message: "Certificate already exists in database", rowData: row }));
   const rows = parsed.rows.filter((row) => !existingSet.has(row.certificate));
   const errors = [...parsed.errors, ...duplicateErrors];
-  const job = await prisma.importJob.create({ data: { shop: session.shop, fileName: file.name, totalRows: rows.length + errors.length, validRows: rows.length, errorRows: errors.length, payload: rows as any, errors: { create: errors.map((error) => ({ rowNumber: error.rowNumber, field: error.field, message: error.message, rowData: error.rowData as any })) } } });
+  const job = await prisma.importJob.create({ data: { shop: session.shop, fileName: (file as File).name, totalRows: rows.length + errors.length, validRows: rows.length, errorRows: errors.length, payload: rows as any, errors: { create: errors.map((error) => ({ rowNumber: error.rowNumber, field: error.field, message: error.message, rowData: error.rowData as any })) } } });
   return { jobId: job.id, fileName: (file as File).name, rows, errors };
   } catch (error) {
     console.error("Diamond import preview failed", error);
